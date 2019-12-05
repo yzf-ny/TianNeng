@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzf.mapper.HistoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.yzf.entity.History">
+        <id column="hid" jdbcType="INTEGER" property="hid"/>
+        <result column="htime" jdbcType="TIMESTAMP" property="htime"/>
+    </resultMap>
+
+
+    <select id="showinfo" resultMap="BaseResultMap">
+    select * from history order by htime desc
+  </select>
+
+    <select id="upShow" resultType="com.yzf.entity.History">
+      select * from history where hid=#{hid}
+    </select>
+
+    <insert id="insert" parameterType="com.yzf.entity.History">
+    insert into history (hid, htime, htext
+      )
+    values (#{hid,jdbcType=INTEGER}, #{htime,jdbcType=TIMESTAMP}, #{htext,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+
+    <select id="getcount" resultType="int">
+    select count(*) from history  hid
+  </select>
+
+    <update id="update">
+    update history
+    set
+      htime = #{htime,jdbcType=TIMESTAMP},
+      htext = #{htext,jdbcType=LONGVARCHAR}
+    where hid = #{hid,jdbcType=INTEGER}
+</update>
+
+    <delete id="deletes" parameterType="java.util.Arrays">
+       delete from history where hid in
+      <foreach collection="list" item="hid" close=")" open="(" separator=",">
+         #{hid}
+      </foreach>
+    </delete>
+
+  <delete id="delete">
+    delete from history where hid=#{hid}
+  </delete>
+
+</mapper>

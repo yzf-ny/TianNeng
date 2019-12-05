@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzf.mapper.CultureMapper">
+    <resultMap id="BaseResultMap" type="com.yzf.entity.Culture">
+
+        <id column="cid" jdbcType="INTEGER" property="cid"/>
+        <result column="csta" jdbcType="INTEGER" property="csta"/>
+    </resultMap>
+
+    <resultMap id="Hismap" type="com.yzf.entity.Hislog">
+
+        <id column="hid" jdbcType="INTEGER" property="hid" />
+        <result column="htime" jdbcType="TIMESTAMP" property="htime" />
+        <result column="hname" jdbcType="VARCHAR" property="hname" />
+        <result column="htype" jdbcType="INTEGER" property="htype" />
+        <result column="caddress" jdbcType="VARCHAR" property="haddress" />
+    </resultMap>
+
+    <select  id="showinfo" resultType="com.yzf.entity.Culture">
+        select * from culture where csta=1
+    </select>
+
+    <update id="update">
+        update culture set ctext=#{text},ctime=default where csta=1
+    </update>
+
+    <select id="showhisCul" resultMap="Hismap">
+         select * from hislog where htype=2 order by hid desc
+    </select>
+
+    <insert id="insert" parameterType="com.yzf.entity.Culture">
+    insert into culture (cid, csta, ctext
+      )
+    values (#{cid,jdbcType=INTEGER}, #{csta,jdbcType=INTEGER}, #{ctext,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+</mapper>

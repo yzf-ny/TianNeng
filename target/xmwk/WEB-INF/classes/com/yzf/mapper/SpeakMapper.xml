@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzf.mapper.SpeakMapper">
+  <resultMap id="BaseResultMap" type="com.yzf.entity.Speak">
+
+    <id column="sid" jdbcType="INTEGER" property="sid" />
+    <result column="stime" jdbcType="TIMESTAMP" property="stime" />
+    <result column="simg" jdbcType="VARCHAR" property="simg" />
+    <result column="sname" jdbcType="VARCHAR" property="sname" />
+  </resultMap>
+
+  <select id="showinfo" resultType="com.yzf.entity.Speak">
+    select * from speak order by stime desc
+  </select>
+
+  <insert id="insert" parameterType="com.yzf.entity.Speak">
+
+    insert into speak (sid, stime, sname,stext)
+    values (0, #{stime,jdbcType=TIMESTAMP}, #{sname,jdbcType=VARCHAR},#{stext,jdbcType=LONGVARCHAR})
+  </insert>
+
+  <select id="getcount"  resultType="int">
+    select count(*) from speak
+  </select>
+
+  <update id="update" parameterType="map">
+    update speak
+    set
+      stime = #{stime,jdbcType=TIMESTAMP},
+      sname = #{sname,jdbcType=VARCHAR},
+
+      stext = #{stext,jdbcType=LONGVARCHAR}
+   <where>
+     sid = #{sid,jdbcType=INTEGER}
+   </where>
+
+
+  </update>
+
+  <select id="upShow" resultType="com.yzf.entity.Speak">
+      select * from speak where sid=#{sid}
+    </select>
+
+  <delete id="deletes" parameterType="java.util.Arrays">
+    delete from speak where sid in
+    <foreach collection="list" item="sid" close=")" open="(" separator=",">
+      #{sid}
+    </foreach>
+  </delete>
+
+  <delete id="delete">
+    delete from speak where sid=#{sid}
+  </delete>
+
+
+
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzf.mapper.ProjectMapper">
+  <resultMap id="BaseResultMap" type="com.yzf.entity.Project">
+
+    <id column="pid" jdbcType="INTEGER" property="pid" />
+    <result column="pname" jdbcType="VARCHAR" property="pname" />
+    <result column="ptime" jdbcType="TIMESTAMP" property="ptime" />
+    <result column="pnum" jdbcType="INTEGER" property="pnum" />
+    <result column="psource" jdbcType="VARCHAR" property="psource" />
+
+  </resultMap>
+
+  <select id="selectIds" resultType="int">
+      select pid from project limit 0,1
+  </select>
+
+  <select id="getPids" resultMap="BaseResultMap">
+
+     select * from project a where  pid in (
+    #{pid},( select pid from project b where  pid &lt; #{pid} order by pid desc limit 0,1),
+    (select pid from project c where  pid &gt; #{pid} order by pid limit 0,1));
+  </select>
+
+<select id="showinfo" resultMap="BaseResultMap">
+  select * from project order by pid desc
+</select>
+
+  <select id="upShow" parameterType="java.lang.Integer" resultType="com.yzf.entity.Project">
+    select *
+    from project
+    where pid = #{pid,jdbcType=INTEGER}
+  </select>
+
+
+
+  <insert id="insert" parameterType="com.yzf.entity.Project">
+
+    insert into project (pid, pname, ptime, 
+      pnum, psource, pimg,ptext
+      )
+    values (0, #{pname,jdbcType=VARCHAR},default ,
+      0, #{psource,jdbcType=VARCHAR},#{pimg }, #{ptext,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+
+  <!--添加浏览人数-->
+  <update id="updateNum">
+    update project set pnum=pnum+#{pnum} where pid=#{pid}
+  </update>
+
+
+  <select id="getcount"  resultType="int">
+    select count(*) from project
+  </select>
+
+
+  <update id="update" parameterType="com.yzf.entity.Project">
+    update project
+    set pname = #{pname,jdbcType=VARCHAR},
+      ptime = default ,
+      pnum =0,
+      <if test="ptext!=null">
+        ptext=#{ptext},
+      </if>
+      <if test="pimg!=null">
+        pimg=#{pimg},
+      </if>
+      psource = #{psource,jdbcType=VARCHAR}
+    where pid = #{pid,jdbcType=INTEGER}
+  </update>
+
+  <delete id="deletes" >
+    delete from project where pid in
+    <foreach collection="list" item="hid" close=")" open="(" separator=",">
+      #{hid}
+    </foreach>
+  </delete>
+
+  <delete id="delete">
+    delete from project where pid=#{pid}
+  </delete>
+
+</mapper>

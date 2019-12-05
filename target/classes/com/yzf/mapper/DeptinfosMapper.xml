@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzf.mapper.DeptinfosMapper">
+    <resultMap id="BaseResultMap" type="com.yzf.entity.Deptinfos">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="dname" jdbcType="VARCHAR" property="dname"/>
+        <result column="dtime" jdbcType="TIMESTAMP" property="dtime"/>
+    </resultMap>
+
+    <select id="showinfo" resultMap="BaseResultMap">
+  select * from deptinfo
+
+       <if test="atype!=null">
+        where dtype=#{atype}  order by dtime desc
+       </if>
+       <if test="atype==null">
+           order by dtime desc
+       </if>
+</select>
+
+    <select id="upShow" parameterType="java.lang.Integer" resultType="com.yzf.entity.Deptinfos">
+    select *
+    from deptinfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+    <insert id="insert" parameterType="com.yzf.entity.Deptinfos">
+    insert into deptinfo values (0,#{dname},#{duty},#{dtime},default)
+    </insert>
+
+
+    <select id="getcount" resultType="int" >
+        select count(*) from deptinfo
+        <where>
+            <if test="atype!=null">
+                dtype=#{atype}
+            </if>
+        </where>
+    </select>
+
+
+    <update id="update" parameterType="com.yzf.entity.Deptinfos">
+        update deptinfo
+        set duty = #{duty}
+        ,dtime=default
+        ,dname=#{dname}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <update parameterType="int" id="updateType">
+        update deptinfo set dtype=#{atype} where id=#{id}
+    </update>
+
+    <delete id="deletes">
+        delete from deptinfo where id in
+        <foreach collection="list" item="hid" close=")" open="(" separator=",">
+            #{hid}
+        </foreach>
+    </delete>
+
+
+    <delete id="delete">
+    delete from deptinfo where id=#{id}
+  </delete>
+
+
+</mapper>

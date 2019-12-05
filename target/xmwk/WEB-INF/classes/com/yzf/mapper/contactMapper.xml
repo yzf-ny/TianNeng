@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzf.mapper.contactMapper">
+  <resultMap id="BaseResultMap" type="com.yzf.entity.contact">
+    <id column="cid" jdbcType="INTEGER" property="cid" />
+    <result column="cphone" jdbcType="VARCHAR" property="cphone" />
+    <result column="cfac" jdbcType="VARCHAR" property="cfac" />
+    <result column="cqq" jdbcType="VARCHAR" property="cqq" />
+    <result column="cemail" jdbcType="VARCHAR" property="cemail" />
+    <result column="chttps" jdbcType="VARCHAR" property="chttps" />
+    <result column="coperate" jdbcType="VARCHAR" property="coperate" />
+    <result column="caddress" jdbcType="VARCHAR" property="caddress" />
+  </resultMap>
+
+  <select id="showinfo" resultMap="BaseResultMap">
+    select * from contact order by cid desc
+  </select>
+
+  <select id="upShow" parameterType="java.lang.Integer" resultType="com.yzf.entity.contact">
+    select *
+    from contact where cid=#{cid}
+  </select>
+
+  <select id="getcount" resultType="int" >
+    select count(*) from contact
+  </select>
+
+  <insert id="insert" parameterType="com.yzf.entity.contact">
+    insert into contact (cid, cphone, cfac, 
+      cqq, cemail, chttps, 
+      coperate, caddress)
+    values (0, #{cphone,jdbcType=VARCHAR}, #{cfac,jdbcType=VARCHAR},
+      #{cqq,jdbcType=VARCHAR}, #{cemail,jdbcType=VARCHAR}, #{chttps,jdbcType=VARCHAR}, 
+      #{coperate,jdbcType=VARCHAR}, #{caddress,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="update" parameterType="com.yzf.entity.contact">
+    update contact
+    <set>
+        <if test="cphone!=null">
+            cphone = #{cphone,jdbcType=VARCHAR},
+        </if>
+        <if test="cfac!=null">
+            cfac = #{cfac,jdbcType=VARCHAR},
+        </if>
+        <if test="cqq!=null">
+            cqq = #{cqq,jdbcType=VARCHAR},
+        </if>
+        <if test="cemail!=null">
+            cemail = #{cemail,jdbcType=VARCHAR},
+        </if>
+        <if test="chttps!=null">
+            chttps = #{chttps,jdbcType=VARCHAR},
+        </if>
+        <if test="coperate!=null">
+            coperate = #{coperate,jdbcType=VARCHAR},
+        </if>
+        <if test="caddress!=null">
+            caddress = #{caddress,jdbcType=VARCHAR}
+        </if>
+    </set>
+    where cid = #{cid,jdbcType=INTEGER}
+  </update>
+
+
+  <delete id="deletes">
+    delete from contact where cid in
+    <foreach collection="list" item="hid" close=")" open="(" separator=",">
+      #{hid}
+    </foreach>
+  </delete>
+
+
+  <delete id="delete">
+    delete from contact where cid=#{cid}
+  </delete>
+
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzf.mapper.HislogMapper">
+  <resultMap id="BaseResultMap" type="com.yzf.entity.Hislog">
+
+    <id column="hid" jdbcType="INTEGER" property="hid" />
+    <result column="htime" jdbcType="TIMESTAMP" property="htime" />
+    <result column="hname" jdbcType="VARCHAR" property="hname" />
+    <result column="htype" jdbcType="INTEGER" property="htype" />
+    <result column="caddress" jdbcType="VARCHAR" property="haddress" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.yzf.entity.Hislog">
+
+    <result column="htext" jdbcType="LONGVARCHAR" property="htext" />
+  </resultMap>
+
+   <!--首页查询hislog-->
+    <select id="showinfo" resultMap="BaseResultMap">
+      select * from hislog where htype=1 order by hid desc
+    </select>
+
+
+<!--公司简介-->
+  <insert id="insert" parameterType="com.yzf.entity.Hislog">
+
+    insert into hislog (hid, htime, hname, 
+      htype, caddress,htext)
+    values (0, default, #{hname,jdbcType=VARCHAR},
+      1,#{haddress}, #{htext,jdbcType=LONGVARCHAR})
+  </insert>
+<!--公司文化-->
+  <insert id="insert1" parameterType="com.yzf.entity.Hislog">
+
+    insert into hislog (hid, htime, hname,
+      htype, caddress,htext)
+    values (0, default, #{hname,jdbcType=VARCHAR},
+      2,#{haddress}, #{htext,jdbcType=LONGVARCHAR})
+  </insert>
+
+
+</mapper>

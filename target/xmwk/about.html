@@ -1,0 +1,320 @@
+﻿ <!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,user-scalable=no, initial-scale=1">
+<title>天能物业管理</title>
+<link rel="stylesheet" href="static/css/index.css" type="text/css">
+<link rel="stylesheet" href="static/css/zym.css" type="text/css">
+
+	<link rel="stylesheet" type="text/css" href="http://www.jq22.com/jquery/bootstrap-3.3.4.css">
+	<link rel="stylesheet" type="text/css" href="http://www.jq22.com/jquery/font-awesome.4.6.0.css">
+	<link rel="stylesheet" href="backstage/stylesheets/css/style.css">
+
+<script type="text/javascript" src="static/js/jquery.js"></script>
+<script type="text/javascript" src="static/js/global.js"></script>
+<script type="text/javascript" src="static/js/hm.js"></script>
+<script type="text/javascript" src="static/js/script.js"></script>
+	<script type="text/javascript" src="backstage/vendor/js/Jquery-3.4.1.js"></script>
+	<script>
+		$(function () {
+
+			$("#content").html("");
+            //获得转过来的参数值
+			var src=window.location.search;
+            var op="";
+            if(src.indexOf("?")!=-1)
+			{
+             op=src.substr(src.indexOf("=")+1);
+			}
+            else
+			op=0;
+			var about=$("a[name='about']");
+           $.each(about,function (i,v) {
+			   var th=$(this);
+               switch (i) {
+				   case 0:if(i==op) showSynopsis(th);break;
+				   case 1:if(i==op) culture(th);break;
+				   case 2:if(i==op) speak(th);break;
+				   case 3:if(i==op) history(th);break;
+			   }
+		   })
+		});
+
+		//改变样式颜色,清空内容
+		function repeat(obj) {
+			//清空内容
+			$("#content").html("");
+
+			//改变颜色
+			var about=$("a[name='about']");
+			$.each(about,function (i,v) {
+				var th=$(this);
+				th.css("background","");
+				th.css("color","");
+			});
+
+			var ob=$(obj);
+			ob.css("background","#005bac");
+			ob.css("color","#fff");
+		}
+
+		//简介
+		function  showSynopsis(obj) {
+			repeat(obj);
+			$("#title").html("公司简介");
+			$("#trace").html("公司简介");
+			$.ajax({
+				url: "showCu"
+				, type: 'POST'
+				, success: function (json) {
+					text = json.ctext;
+					$("#content").html(json.ctext);
+				}
+			});
+		}
+
+		//文化
+		function culture(obj)
+		{
+          repeat(obj);
+			$("#title").html("公司文化");
+			$("#trace").html("公司文化")
+			$.ajax({
+				url: "showinfo"
+				, type: 'POST'
+				, success: function (json) {
+					text = json.ctext;
+					$("#content").html(json.ctext);
+				}
+			});
+		}
+        //致辞
+		function  speak(obj) {
+			repeat(obj);
+			$("#title").html("公司致辞");
+			$("#trace").html("公司致辞");
+			$.ajax({
+				url: "speack/showinfo"
+				, type: 'POST'
+				, data: {'num': 1, 'count': 1}
+				, success: function (json) {
+					var list = json.list;
+						var add = list[0].stext;
+						//alert(add)
+						$("#content").html(add);
+				}
+			});
+		}
+		//发展历程
+		function history(obj)
+		{
+			repeat(obj);
+			$("#title").html("发展历史");
+			$("#trace").html("发展历史");
+			$.ajax({
+				url: "history/showinfo"
+				, type: 'POST'
+				, data: {'num': 1,'count':10}
+				, success: function (json) {
+					var list=json.list;
+					var add="<div class='timeline' id='timeline'>";
+					for (var i = 0; i < list.length; i++) {
+						 add += "<div class='timeline-box'>"
+								+ "<div class='timeline-icon bg-primary'>"
+								+ "<a name='" + list[i].htime + "'></a>"
+								+ "<i class=' fa fa-file'></i>"
+								+ "</div>"
+								+ "<div class='timeline-content'>"
+								+ "<h4 class='tl-title' >" + list[i].htime + "</h4>"
+								+ list[i].htext
+								+ "</div> "
+								+ "</div>"
+					}
+					add +="</div>";
+					$("#content").append(add);
+				}
+			});
+		}
+	</script>
+
+</head>
+<body style="background-color: white">
+<!--头部-->
+<div class="top_bg" id="top_bg">
+    <div class="top_gang">
+    	<div class="tou_zj">
+    		<div class="hy">
+    			<img src="static/picture/tou_tb_03.png">
+    			<span>欢迎来到贵州天能物业管理有限公司</span>
+    		</div>
+    		<div class="soucang">
+    			<a href="#">设为首页&nbsp;</a>｜
+    			<a href="#">&nbsp;加入收藏</a>
+    		</div>
+    	</div>
+    </div>
+    <div class="top_main">
+        <div class="top_logo">
+            <a href='./'><img src="static/picture/logo.png"></a>
+        </div>
+        <!--导航--> 
+        <div class="daohang"> 
+            <div class="header_nav">
+				<div class="main clearBoth">
+					<ul class="nav right">
+						<li class="narrow_wrap">
+							<a class="nav_btn" href="index.html">
+								网站首页
+								<b></b>
+							</a>
+						</li>
+						<li class="narrow_wrap">
+							<a class="nav_btn" href="about.html" style="color: #01aef0;">
+								关于我们
+								<b></b>
+								<div></div>
+							</a>
+							<div class="service_nav hide_nav hide_nav_narrow none" style="opacity: 0;">
+								<ul>
+									<li>
+										<a href="about.html?op=0">公司简介</a>
+									</li>
+									<li>
+										<a href="about.html?op=1">公司文化</a>
+									</li>
+									<li>
+										<a href="about.html?op=2">发展历程</a>
+									</li>
+									<li>
+										<a href="about.html?op=3">领导致辞</a>
+									</li>
+								</ul>
+							</div>
+						</li>
+						<li class="narrow_wrap">
+							<a class="nav_btn" href="products.html">
+								项目展示
+								<b></b>
+								<div></div>
+							</a>
+						</li>
+						<li class="narrow_wrap">
+							<a class="nav_btn" href="news.html" style="color: #01aef0;">
+								公司动态
+								<b></b>
+							</a>
+							<div class="about_us_nav hide_nav hide_nav_narrow none" style="opacity: 0;">
+								<ul>
+									<li>
+										<a href="news.html?op=0">公司新闻</a>
+									</li>
+									<li>
+										<a href="news.html?op=1">行业新闻</a>
+									</li>
+									<li>
+										<a href="news.html?op=2">公司大事记</a>
+									</li>
+								</ul>
+							</div>
+						</li>
+						<li class="narrow_wrap">
+							<a class="nav_btn" href="join.html">
+								人才招聘
+								<b></b>
+							</a>
+						</li>
+						<li class="narrow_wrap">
+							<a class="nav_btn" href="contact.html">
+								联系我们
+								<b></b>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+       </div>
+    </div>
+</div>
+<!--子页-->
+<div class="ziye_bj">
+	<div class="ziye_tu">
+		<img src="static/picture/gywm_02.jpg" width="100%">
+	</div>
+</div>
+<!--关于我们-->
+<div class="zy_gywm">
+	<div class="ejdh">
+		<div class="shang_g"></div>
+		<div class="women">
+			<div class="btmc">
+				<h1>A</h1>
+				<p>关于我们<span>bout us</span></p>
+			</div>
+			<ul class="skb">
+				<li style="background: #005bac; width: 25%;"></li>
+				<li style="background: #ff8400; width: 20%;"></li>
+				<li style="background: #d3d3d3; width: 55%;"></li>
+			</ul>
+		</div>
+		<div class="zy_dh_lb">
+			<ul>
+				<li><img src="static/picture/zy1_08_z.png"><a  name="about" href="javascript:void(0)" onclick="showSynopsis(this)">公司简介</a></li>
+				<li><img src="static/picture/zy1_08_z.png"><a href="javascript:void(0)" name="about" onclick="culture(this)" >公司文化</a></li>
+				<li><img src="static/picture/zy1_08_z.png"><a href="javascript:void(0)"  name="about" onclick="speak(this)" >领导致词</a></li>
+				<li><img src="static/picture/zy1_08_z.png"><a href="javascript:void(0)"  name="about" onclick="history(this)">发展历程</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="touyin"></div>
+	<div class="zynr_db">
+		<div class="lujing">
+			<h2 id="title"></h2>
+			<p>您的位置：首页 > <font id="trace"></font></p>
+		</div>
+		<ul class="skb" style="margin-bottom: 20px;">
+			<li style="background: #005bac; width: 12%;"></li>
+			<li style="background: #ff8400; width: 15%;"></li>
+			<li style="background: #d3d3d3; width: 73%;"></li>
+		</ul>
+
+		<!--内容-->
+		<div id="content" class="gsjj_nr" >
+
+		</div>
+	</div>
+</div>
+
+
+<!--底部-->
+<div class="dibu">
+	<div class="dibu_jz">
+		<div class="dibu_zuo">
+			<p>联系地址：贵州省贵阳市市南路120号黔电发展楼6楼<br>
+			电 话：0851-85594612   传 真：0851-85594612<br></p>
+			<ul>
+				<li><span>分享到：</span></li>
+				<li><a href="http://connect.qq.com/widget/shareqq/index.html?url=file%3A%2F%2F%2FC%3A%2FUsers%2Fadmin%2FDesktop%2F%25E6%25BD%2598%25E4%25B8%25AD%25E5%2585%25A8%2F%25E7%25BD%2591%25E7%25AB%2599%2Fgztnwy_qt%2Fnewlist.html%230-sqq-1-12217-9737f6f9e09dfaf5d3fd14d775bfee85&title=%E5%A4%A9%E8%83%BD%E7%89%A9%E4%B8%9A%E7%AE%A1%E7%90%86&desc=&summary=&site=baidu" target="_black"><img src="static/picture/dibu_06.png"></a></li>
+				<li><a href="http://service.weibo.com/share/share.php" target="_black"><img src="static/picture/dibu_08.png"></a></li>
+				<li><a href="http://widget.renren.com/dialog/share?resourceUrl=file%3A%2F%2F%2FC%3A%2FUsers%2Fadmin%2FDesktop%2F%25E6%25BD%2598%25E4%25B8%25AD%25E5%2585%25A8%2F%25E7%25BD%2591%25E7%25AB%2599%2Fgztnwy_qt%2Fnewlist.html%230-renren-1-63647-98fde57bb3d39343db0f272b38411f3e&srcUrl=file%3A%2F%2F%2FC%3A%2FUsers%2Fadmin%2FDesktop%2F%25E6%25BD%2598%25E4%25B8%25AD%25E5%2585%25A8%2F%25E7%25BD%2591%25E7%25AB%2599%2Fgztnwy_qt%2Fnewlist.html%230-renren-1-63647-98fde57bb3d39343db0f272b38411f3e&title=%E5%A4%A9%E8%83%BD%E7%89%A9%E4%B8%9A%E7%AE%A1%E7%90%86&description=" target="_black"><img src="static/picture/dibu_10.png"></a></li>
+			</ul>
+		</div>
+		<div class="dibu_you">
+			<ul>
+				<li><a href="about.html?op=0">公司简介&nbsp;&nbsp;</a>｜</li>
+				<li><a href="about.html?op=1">企业文化&nbsp;&nbsp;</a>｜</li>
+				<li><a href="join.html">人才招聘&nbsp;&nbsp;</a>｜</li>
+				<li><a href="contact.html">联系我们</a></li>
+			</ul>
+			<img class="dibu_logo" src="static/picture/dibu_03.png">
+		</div>
+	</div>
+</div>
+<div class="dibu_1">
+	<p>版权所有 贵州天能物业管理有限公司 黔ICP备10001741号<br>
+技术支持：yzf 驰通网络</p>
+</div>
+
+
+</body>
+</html>

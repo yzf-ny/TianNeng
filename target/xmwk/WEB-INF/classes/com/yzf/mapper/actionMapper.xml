@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzf.mapper.actionMapper">
+    <resultMap id="BaseResultMap" type="com.yzf.entity.action">
+
+        <id column="aid" jdbcType="INTEGER" property="aid"/>
+        <result column="atitle" jdbcType="VARCHAR" property="atitle"/>
+        <result column="asource" jdbcType="VARCHAR" property="asource"/>
+        <result column="atime" jdbcType="TIMESTAMP" property="atime"/>
+        <result column="aimg" jdbcType="VARCHAR" property="aimg"/>
+        <result column="atype" jdbcType="INTEGER" property="atype"/>
+    </resultMap>
+
+    <resultMap id="ids" type="com.yzf.entity.action">
+        <id column="aid" jdbcType="INTEGER" property="aid"/>
+    </resultMap>
+
+    <select id="showinfo" resultMap="BaseResultMap">
+      select * from action where atype=${atype} order by atime desc
+    </select>
+
+    <!--查询aid集合-->
+    <select id="selectIds" resultType="int">
+        select aid from action where atype=#{atype} limit 0,1
+    </select>
+    
+    <!--上一篇或下一篇-->
+    <select id="getAids" resultMap="BaseResultMap">
+         select * from action a where atype=#{atype} and aid in (
+        #{aid},( select aid from action where atype=#{atype} and aid &lt;#{aid} order by aid desc limit 0,1),
+        (select aid from action where atype=#{atype} and aid &gt;#{aid} order by aid limit 0,1));
+    </select>
+
+  <select id="getcount" resultType="int">
+   select count(*) from action where atype=${atype}
+  </select>
+
+    <select id="upShow" parameterType="java.lang.Integer" resultType="com.yzf.entity.action">
+    select *
+    from action
+    where aid = #{aid,jdbcType=INTEGER}
+  </select>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+    delete from action
+    where aid = #{aid,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deletes" >
+    delete from action where aid in
+    <foreach collection="list" item="hid" close=")" open="(" separator=",">
+      #{hid}
+    </foreach>
+  </delete>
+
+    <insert id="insert" parameterType="com.yzf.entity.action">
+    insert into action (aid, atitle, asource, 
+       atime, aimg,atype,
+      atext)
+    values (0, #{atitle,jdbcType=VARCHAR}, #{asource,jdbcType=VARCHAR},
+       default , #{aimg},#{atype,jdbcType=INTEGER},
+      #{atext,jdbcType=LONGVARCHAR})
+  </insert>
+
+
+    <update id="update" parameterType="com.yzf.entity.action">
+
+    update action
+    set atitle = #{atitle,jdbcType=VARCHAR},
+      asource = #{asource,jdbcType=VARCHAR},
+      atime = default ,
+      <if test="aimg!=null">
+          aimg=#{aimg},
+      </if>
+      atype = #{atype,jdbcType=INTEGER},
+      atext = #{atext,jdbcType=LONGVARCHAR}
+    where aid = #{aid,jdbcType=INTEGER}
+  </update>
+
+
+</mapper>
